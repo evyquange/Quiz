@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Quiz</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      text-align: center;
+      margin: 50px;
+    }
+    h1 {
+      color: #333;
+    }
+    .quiz-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .question {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    .options button {
+      font-size: 1em;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .options button:hover {
+      background-color: #2980b9;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+    #timer {
+      margin-top: 10px;
+      font-size: 1.2em;
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Interactive Quiz</h1>
+
+  <div class="quiz-container" id="quiz-container">
+    <!-- Quiz content will be inserted here dynamically -->
+    <p id="result"></p>
+    <p id="timer">Time Left: <span id="time">20</span> seconds</p>
+  </div>
+
+  <script>
+	var questions = [
+	  {
+		question: "Which programming language is known for its readability and simplicity?",
+		options: ["JavaScript", "Python", "Java", "C++"],
+		correctAnswer: "Python"
+	  },
+	  {
+		question: "What is the primary purpose of CSS?",
+		options: ["Styling web pages", "Managing databases", "Handling server-side logic", "Defining API endpoints"],
+		correctAnswer: "Styling web pages"
+	  },
+	  {
+		question: "Which of the following is a statically-typed language?",
+		options: ["JavaScript", "Python", "Java", "TypeScript"],
+		correctAnswer: "Java"
+	  },
+	  {
+		question: "What does HTML stand for?",
+		options: ["HyperText Markup Language", "High-Level Text Management Language", "Hyperlink and Text Markup Language", "Home Tool Markup Language"],
+		correctAnswer: "HyperText Markup Language"
+	  },
+	  {
+		question: "In which year was the Python programming language first released?",
+		options: ["1990", "2000", "1980", "2010"],
+		correctAnswer: "1990"
+	  },
+	  {
+		question: "What is the primary purpose of the 'for' loop in programming?",
+		options: ["Declaring variables", "Conditional branching", "Iterating over a sequence", "Function definition"],
+		correctAnswer: "Iterating over a sequence"
+	  },
+	  {
+		question: "Which programming language is often used for data analysis and machine learning?",
+		options: ["Java", "Python", "C#", "Ruby"],
+		correctAnswer: "Python"
+	  },
+	  {
+		question: "What is the purpose of the 'git' version control system?",
+		options: ["Database management", "Code collaboration", "Text editing", "Graphics design"],
+		correctAnswer: "Code collaboration"
+	  },
+	  {
+		question: "Which of the following is a front-end JavaScript framework?",
+		options: ["Django", "Angular", "Flask", "Express"],
+		correctAnswer: "Angular"
+	  },
+	  {
+		question: "What is the role of the 'else' statement in conditional structures?",
+		options: ["Loop control", "Error handling", "Code execution", "Alternative execution path"],
+		correctAnswer: "Alternative execution path"
+	  }
+	];
+
+
+    var currentQuestionIndex = 0;
+    var correctAnswers = 0;
+    var timerSeconds = 20;
+    var timerElement = document.getElementById('time');
+    var resultElement = document.getElementById('result');
+    var quizContainer = document.getElementById('quiz-container');
+
+    function renderQuestion() {
+      var currentQuestion = questions[currentQuestionIndex];
+
+      quizContainer.innerHTML = `
+        <div class="question">${currentQuestion.question}</div>
+        <div class="options">
+          ${currentQuestion.options.map(option => `<button onclick="checkAnswer('${option}')">${option}</button>`).join('')}
+        </div>
+      `;
+
+      // Reset timer
+      timerSeconds = 20;
+    }
+
+    function checkAnswer(selectedOption) {
+      var currentQuestion = questions[currentQuestionIndex];
+
+      if (selectedOption === currentQuestion.correctAnswer) {
+        correctAnswers++;
+        resultElement.innerHTML = `Correct! 🎉 Total Correct Answers: ${correctAnswers}`;
+      } else {
+        resultElement.innerHTML = `Incorrect. Try again! ❌ Total Correct Answers: ${correctAnswers}`;
+      }
+
+      // Move to the next question or end the quiz
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        renderQuestion();
+      } else {
+        clearInterval(timerInterval);
+        quizContainer.innerHTML = `<p>Quiz completed. You got ${correctAnswers} out of ${questions.length} questions correct. Thanks for participating!</p>`;
+      }
+    }
+
+    function updateTimer() {
+      timerSeconds--;
+
+      if (timerSeconds >= 0) {
+        timerElement.textContent = timerSeconds;
+      } else {
+        // Time's up, move to the next question
+        checkAnswer('');
+      }
+    }
+
+    // Initial render
+    renderQuestion();
+
+    // Start the timer
+    var timerInterval = setInterval(updateTimer, 1000);
+  </script>
+
+</body>
+</html>
